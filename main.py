@@ -54,6 +54,8 @@ def verify_png(path: str) -> None:
                     sys.exit(f"error: {path} is missing the IEND chunk")
                 (length,), chunk_type = struct.unpack(">I", head[:4]), head[4:8]
                 if chunk_type == b"IEND":
+                    if length != 0:
+                        sys.exit(f"error: {path} has an IEND chunk with a non-empty payload")
                     break
                 fh.seek(length + 4, os.SEEK_CUR)  # Skip payload + CRC.
 
